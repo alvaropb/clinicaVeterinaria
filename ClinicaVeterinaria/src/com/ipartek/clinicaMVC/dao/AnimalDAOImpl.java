@@ -33,12 +33,12 @@ public class AnimalDAOImpl implements AnimalDAO {
     private int id;
 
 			 */
-			String llamadaProcedimiento="{call getAnimalById(?,?,?,?,?,?)}";
+			String llamadaProcedimiento="{CALl clinica_veterinaria.clinica_veterinaria_animal_getById(?,?,?,?,?,?)}";
 			conexion=Conexion.getConexion();
 			callableStatement=conexion.prepareCall(llamadaProcedimiento);
 			
 			//parametro de entrada
-			callableStatement.setInt("id", id);
+			callableStatement.setInt("in_id", id);
 			//parametros de salida ordenados segun el modelo Animal 
 			//id IN ,nombre OUT,especie OUT,raza OUT,edad OUT,id OUT 
 			callableStatement.registerOutParameter(2, java.sql.Types.VARCHAR);
