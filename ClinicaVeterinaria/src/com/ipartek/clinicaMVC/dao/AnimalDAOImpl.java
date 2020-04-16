@@ -16,8 +16,44 @@ public class AnimalDAOImpl implements AnimalDAO {
 
 	@Override
 	public int createAnimal(Animal animal) {
-		// TODO Auto-generated method stub
-		return 0;
+		int id=0;
+		try {
+			//obtener la conexion
+			/*
+			 *     private String nombre;
+    private String especie;
+    private String raza;
+    private int edad;
+    private int id;
+
+			 */
+			String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_createAnimal(?,?,?,?,?)}";
+											   
+			conexion=Conexion.getConexion();
+			callableStatement=conexion.prepareCall(llamadaProcedimiento);
+			//					p_nombre,p_especie,p_raza,p_edad
+			//parametros de entrada nombre IN,especie IN,raza IN,edad IN
+			callableStatement.setString("p_nombre",animal.getNombre() );
+			callableStatement.setString("p_especie",animal.getEspecie() );
+			callableStatement.setString("p_raza", animal.getRaza());
+			callableStatement.setInt("p_edad",animal.getEdad() );
+			//parametros de salida ordenados segun el modelo Animal 
+			//id OUT
+			callableStatement.registerOutParameter(5, java.sql.Types.INTEGER);
+
+			
+			
+			callableStatement.execute();
+			id=callableStatement.getInt("p_id");
+			//id=callableStatement.getInt(5);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+
+		return id;
 	}
 
 	@Override
@@ -33,7 +69,7 @@ public class AnimalDAOImpl implements AnimalDAO {
     private int id;
 
 			 */
-			String llamadaProcedimiento="{CALl clinica_veterinaria.clinica_veterinaria_animal_getById(?,?,?,?,?,?)}";
+			String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_getById(?,?,?,?,?,?)}";
 			conexion=Conexion.getConexion();
 			callableStatement=conexion.prepareCall(llamadaProcedimiento);
 			
@@ -73,8 +109,40 @@ public class AnimalDAOImpl implements AnimalDAO {
 
 	@Override
 	public boolean update(Animal animal) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean resultado=false;
+		try {
+			//obtener la conexion
+			/*
+			 *     private String nombre;
+    private String especie;
+    private String raza;
+    private int edad;
+    private int id;
+
+			 */
+			String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_updateAnimal(?,?,?,?,?,?)}";
+											   
+			conexion=Conexion.getConexion();
+			callableStatement=conexion.prepareCall(llamadaProcedimiento);
+			//					
+			//parametros de entrada nombre IN,especie IN,raza IN,edad IN
+			callableStatement.setString("p_nombre",animal.getNombre() );
+			callableStatement.setString("p_especie",animal.getEspecie() );
+			callableStatement.setString("p_raza", animal.getRaza());
+			callableStatement.setInt("p_edad",animal.getEdad() );
+			callableStatement.setInt("p_id",animal.getId() );
+		
+			
+			
+			callableStatement.execute();
+			resultado=callableStatement.getBoolean(6);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+
+		return resultado;
 	}
 
 	@Override
