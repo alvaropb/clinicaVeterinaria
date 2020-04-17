@@ -3,6 +3,7 @@ package com.ipartek.clinicaMVC.dao;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ipartek.clinicaMVC.conexion.Conexion;
@@ -19,14 +20,6 @@ public class AnimalDAOImpl implements AnimalDAO {
 		int id=0;
 		try {
 			//obtener la conexion
-			/*
-			 *     private String nombre;
-    private String especie;
-    private String raza;
-    private int edad;
-    private int id;
-
-			 */
 			String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_createAnimal(?,?,?,?,?)}";
 											   
 			conexion=Conexion.getConexion();
@@ -58,17 +51,10 @@ public class AnimalDAOImpl implements AnimalDAO {
 
 	@Override
 	public Animal getById(int id) {
-		Animal animal=null;;
+		Animal animal=null;
 		try {
 			//obtener la conexion
-			/*
-			 *     private String nombre;
-    private String especie;
-    private String raza;
-    private int edad;
-    private int id;
 
-			 */
 			String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_getById(?,?,?,?,?,?)}";
 			conexion=Conexion.getConexion();
 			callableStatement=conexion.prepareCall(llamadaProcedimiento);
@@ -103,8 +89,28 @@ public class AnimalDAOImpl implements AnimalDAO {
 
 	@Override
 	public List<Animal> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Animal>animales=new ArrayList<Animal>();
+		String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_getAll()}";
+		
+		try {
+			conexion=Conexion.getConexion();
+			callableStatement=conexion.prepareCall(llamadaProcedimiento);
+			ResultSet resultSet=callableStatement.executeQuery();
+			//id IN ,nombre OUT,especie OUT,raza OUT,edad OUT,id OUT 
+		while (resultSet.next()) {
+			Animal animal=new Animal();
+			animal.setNombre(resultSet.getNString("nombre"));
+			animal.setEspecie(resultSet.getNString("especie"));
+			animal.setRaza(resultSet.getNString("raza"));
+			animal.setEdad(resultSet.getInt("edad"));
+			animal.setId(resultSet.getInt("id"));
+			animales.add(animal);
+			
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return animales;
 	}
 
 	@Override
@@ -112,14 +118,6 @@ public class AnimalDAOImpl implements AnimalDAO {
 		boolean resultado=false;
 		try {
 			//obtener la conexion
-			/*
-			 *     private String nombre;
-    private String especie;
-    private String raza;
-    private int edad;
-    private int id;
-
-			 */
 			String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_updateAnimal(?,?,?,?,?,?)}";
 											   
 			conexion=Conexion.getConexion();
@@ -132,7 +130,6 @@ public class AnimalDAOImpl implements AnimalDAO {
 			callableStatement.setInt("p_edad",animal.getEdad() );
 			callableStatement.setInt("p_id",animal.getId() );
 		
-			
 			
 			callableStatement.execute();
 			resultado=callableStatement.getBoolean(6);
@@ -147,8 +144,28 @@ public class AnimalDAOImpl implements AnimalDAO {
 
 	@Override
 	public boolean delete(int id) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean resultado=false;
+		try {
+			//obtener la conexion
+
+			String llamadaProcedimiento="{CALL clinica_veterinaria.clinica_veterinaria_animal_deleteAnimal(?,?)}";
+											   
+			conexion=Conexion.getConexion();
+			callableStatement=conexion.prepareCall(llamadaProcedimiento);
+			//					
+			//parametros de entrada id IN
+
+			callableStatement.setInt("p_id",id );
+			
+			callableStatement.execute();
+			resultado=callableStatement.getBoolean(2);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+
+		return resultado;
 	}
 
 }
